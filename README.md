@@ -1,1 +1,1 @@
-# jira-integration-frontend
+# jira-integration-backend
