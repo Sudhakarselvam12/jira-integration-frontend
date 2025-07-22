@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 type Column<T> = {
   header: string;
   accessor: keyof T;
@@ -9,6 +11,13 @@ type TableProps<T> = {
 };
 
 function Table<T>({ columns, data }: TableProps<T>) {
+  const [expandedRows, setExpandedRows] = useState<number[]>([]);
+
+  const toggleRow = (index: number) => {
+    setExpandedRows(prev =>
+      prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
+    );
+  };
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full border">
@@ -25,8 +34,10 @@ function Table<T>({ columns, data }: TableProps<T>) {
           {data.map((row, idx) => (
             <tr key={idx} className="hover:bg-gray-50">
               {columns.map((col) => (
-                <td key={String(col.accessor)} className="p-2 border">
-                  {String(row[col.accessor])}
+                <td key={String(col.accessor)} className="p-2 border max-w-xs align-top cursor-pointer" onClick={() => toggleRow(idx)}>
+                  <div className={expandedRows.includes(idx) ? '' : 'line-clamp-3 overflow-hidden text-ellipsis'}>
+                    {String(row[col.accessor])}
+                  </div>
                 </td>
               ))}
             </tr>

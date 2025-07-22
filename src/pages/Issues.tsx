@@ -3,10 +3,19 @@ import Table from "./../common/Table";
 import axios from "axios";
 
 type Issue = {
-  id: number;
+  jiraId: string;
   title: string;
-  status: string;
+  description: string;
+  type: string;
+  priority: string;
+  assignee: string;
+  reporter: string;
+  project: string;
+  estimatedTime: string;
+  spentTime: string;
   createdAt: string;
+  updatedAt: string;
+  status: string;
 };
 
 const Issues = () => {
@@ -28,8 +37,16 @@ const Issues = () => {
   }, []);
 
   const columns: { header: string; accessor: keyof Issue }[] = [
-    { header: "ID", accessor: "id" },
+    { header: "Jira ID", accessor: "jiraId" },
     { header: "Title", accessor: "title" },
+    { header: "Description", accessor: "description" },
+    { header: "Type", accessor: "type" },
+    { header: "Priority", accessor: "priority" },
+    { header: "Assignee", accessor: "assignee" },
+    { header: "Reporter", accessor: "reporter" },
+    { header: "Project", accessor: "project" },
+    { header: "Estimated Time", accessor: "estimatedTime" },
+    { header: "Spent Time", accessor: "spentTime" },
     { header: "Status", accessor: "status" },
     { header: "Created At", accessor: "createdAt" },
   ];
