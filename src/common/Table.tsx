@@ -31,17 +31,25 @@ function Table<T>({ columns, data }: TableProps<T>) {
           </tr>
         </thead>
         <tbody>
-          {data.map((row, idx) => (
-            <tr key={idx} className="hover:bg-gray-50">
+            {!data || data.length === 0 ? (
+            <tr>
+              <td colSpan={columns.length} className="p-2 border text-center text-gray-500">
+              No Data Available
+              </td>
+            </tr>
+            ) : (
+            data.map((row, idx) => (
+              <tr key={idx} className="hover:bg-gray-50">
               {columns.map((col) => (
                 <td key={String(col.accessor)} className="p-2 border max-w-xs align-top cursor-pointer" onClick={() => toggleRow(idx)}>
-                  <div className={expandedRows.includes(idx) ? '' : 'line-clamp-3 overflow-hidden text-ellipsis'}>
-                    {String(row[col.accessor])}
-                  </div>
+                <div className={expandedRows.includes(idx) ? '' : 'line-clamp-3 overflow-hidden text-ellipsis'}>
+                  {String(row[col.accessor])}
+                </div>
                 </td>
               ))}
-            </tr>
-          ))}
+              </tr>
+            ))
+            )}
         </tbody>
       </table>
     </div>

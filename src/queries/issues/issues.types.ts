@@ -23,3 +23,21 @@ export type FetchIssuesParams = {
   page: number;
   limit: number;
 };
+
+export type IssueFilterOptions = {
+  type: string[];
+  priority: string[];
+  status: string[];
+  project: string[];
+  reporter: string[];
+};
+
+export type IssueFilter = {
+  jiraId: string;
+  title: string;
+  type: string;
+  priority: string;
+  status: string;
+  project: string;
+  reporter: string;
+};
