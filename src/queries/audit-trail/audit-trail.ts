@@ -1,10 +1,14 @@
 import axios from "axios";
-import type { AuditTrailData, FetchAuditParams } from "./audit-trail.types";
+import type { AuditFilter, AuditFilterOptions, AuditTrailData, FetchAuditParams } from "./audit-trail.types";
 import { useQuery } from "@tanstack/react-query";
 
-export const fetchAuditData = async ({ page, limit }: FetchAuditParams): Promise<AuditTrailData> => {
+export const fetchAuditData = async (filters: AuditFilter, { page, limit }: FetchAuditParams): Promise<AuditTrailData> => {
   const res = await axios.get(`${import.meta.env.VITE_BACK_URL}/api/audit`, {
     params: {
+      entityType: filters.entityType,
+      changedField: filters.changedField,
+      startDate: filters.startDate,
+      endDate: filters.endDate,
       page,
       limit,
     },
@@ -12,9 +16,20 @@ export const fetchAuditData = async ({ page, limit }: FetchAuditParams): Promise
   return res.data;
 };
 
-export const useAuditTrailQuery = (page: number, limit: number) => {
+export const useAuditTrailQuery = (filters: AuditFilter, page: number, limit: number, options? : { enabled?: boolean } ) => {
   return useQuery<AuditTrailData>({
-    queryKey: ['audit', page, limit],
-    queryFn: () => fetchAuditData({ page, limit }),
+    queryKey: ['audit', filters, page, limit],
+    queryFn: () => fetchAuditData(filters, { page, limit }),
+    ...options,
+  });
+};
+
+export const useGetAuditFilterQuery = () => {
+  return useQuery<AuditFilterOptions>({
+    queryKey: ['auditFilter'],
+    queryFn: async () => {
+      const res = await axios.get(`${import.meta.env.VITE_BACK_URL}/api/audit/filteroptions`);
+      return res.data;
+    },
   });
 };

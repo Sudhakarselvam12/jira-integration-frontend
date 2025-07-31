@@ -16,7 +16,7 @@ const issueFilter: IssueFilter = {
 };
 
 const Issues = () => {
-    const [filters, setFilters] = useState<IssueFilter>(issueFilter);
+  const [filters, setFilters] = useState<IssueFilter>(issueFilter);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [debouncedFilters] = useDebounce(filters, 400);

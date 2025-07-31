@@ -16,3 +16,15 @@ export type FetchAuditParams = {
   page: number;
   limit: number;
 };
+
+export type AuditFilterOptions = {
+  entityType: string[];
+  changedField: string[];
+};
+
+export type AuditFilter = {
+  entityType: string;
+  changedField: string;
+  startDate: string;
+  endDate: string;
+};
