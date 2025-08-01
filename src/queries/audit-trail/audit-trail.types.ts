@@ -1,9 +1,9 @@
 export type AuditTrailData = {
-  data: AuditTrail[];
+  data: AuditTrailType[];
   count: number;
 }
 
-export type AuditTrail = {
+export type AuditTrailType = {
   entityType: string;
   entityId: string;
   changedField: string;

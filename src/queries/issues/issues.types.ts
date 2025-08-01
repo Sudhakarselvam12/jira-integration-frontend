@@ -1,6 +1,7 @@
 export type IssueData = {
   data: Issue[];
   count: number;
+  lastSyncedAt: string;
 }
 
 export type Issue = {

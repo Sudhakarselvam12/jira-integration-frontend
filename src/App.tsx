@@ -3,7 +3,7 @@ import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashbord";
 import Projects from "./pages/Projects.tsx";
 import Issues from "./pages/Issues.tsx";
-import Audit from "./pages/AuditTrail.tsx";
+import AuditTrail from "./pages/AuditTrail.tsx";
 
 const App = () => {
   return (
@@ -13,7 +13,7 @@ const App = () => {
           <Route index element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
           <Route path="issues" element={<Issues />} />
-          <Route path="audit" element={<Audit />} />
+          <Route path="audit" element={<AuditTrail />} />
         </Route>
       </Routes>
     </BrowserRouter>

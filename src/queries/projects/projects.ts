@@ -18,3 +18,13 @@ export const useProjectsQuery = (page: number, limit: number) => {
     queryFn: () => fetchProjects({ page, limit }),
   });
 };
+
+export const useGetProjectCountsQuery = () => {
+  return useQuery({
+    queryKey: ['projectCount'],
+    queryFn: async () => {
+      const res = await axios.get(`${import.meta.env.VITE_BACK_URL}/api/projects/count`);
+      return res.data;
+    },
+  });
+}

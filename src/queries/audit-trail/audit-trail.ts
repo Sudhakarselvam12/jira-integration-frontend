@@ -33,3 +33,13 @@ export const useGetAuditFilterQuery = () => {
     },
   });
 };
+
+export const useGetAuditCountsQuery = () => {
+  return useQuery({
+    queryKey: ['auditCount'],
+    queryFn: async () => {
+      const res = await axios.get(`${import.meta.env.VITE_BACK_URL}/api/audit/count`);
+      return res.data;
+    },
+  });
+};

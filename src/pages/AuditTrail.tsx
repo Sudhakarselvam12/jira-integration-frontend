@@ -1,5 +1,5 @@
 import Table from './../common/Table';
-import type { AuditFilter, AuditTrail } from '../queries/audit-trail/audit-trail.types';
+import type { AuditFilter, AuditTrailType } from '../queries/audit-trail/audit-trail.types';
 import { useState } from 'react';
 import { formatDate } from '../common/helper';
 import { useAuditTrailQuery, useGetAuditFilterQuery } from '../queries/audit-trail/audit-trail';
@@ -30,7 +30,7 @@ const isValidDateRange =
   const total = data?.count || 0;
   const totalPages = Math.ceil(total / limit);
 
-  const columns: { header: string; accessor: keyof AuditTrail }[] = [
+  const columns: { header: string; accessor: keyof AuditTrailType }[] = [
     { header: 'Entity Type', accessor: 'entityType' },
     { header: 'Entity ID', accessor: 'entityId' },
     { header: 'Changed Field', accessor: 'changedField' },

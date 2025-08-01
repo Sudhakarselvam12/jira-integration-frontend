@@ -1,6 +1,6 @@
 import Table from './../common/Table';
 import type { Issue, IssueFilter } from '../queries/issues/issues.types';
-import { useGetIssueFilterQuery, useIssuesQuery } from '../queries/issues/issues';
+import { useGetIssueFilterQuery, useIssuesQuery, useIssueSync } from '../queries/issues/issues';
 import { useState } from 'react';
 import { useDebounce } from 'use-debounce';
 import { formatDate } from '../common/helper';
@@ -16,6 +16,7 @@ const issueFilter: IssueFilter = {
 };
 
 const Issues = () => {
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [filters, setFilters] = useState<IssueFilter>(issueFilter);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -23,6 +24,20 @@ const Issues = () => {
 
   const { data, isLoading, isError } = useIssuesQuery(debouncedFilters, page, limit);
   const { data: filterOptions } = useGetIssueFilterQuery();
+
+  const onSyncSuccess = () => {
+    setStatusMessage('Sync completed successfully.');
+    setTimeout(() => setStatusMessage(null), 5000);
+  }
+  const onSyncError = () => {
+    setStatusMessage('Failed to sync issues.');
+    setTimeout(() => setStatusMessage(null), 5000);
+  }
+
+  const {
+    mutate: syncIssues,
+    isPending: isSyncPending,
+  } = useIssueSync(onSyncSuccess, onSyncError);
 
   const total = data?.count || 0;
   const totalPages = Math.ceil(total / limit);
@@ -59,9 +74,19 @@ const Issues = () => {
     }));
   };
 
+  const handleReset = () => {
+    setPage(1);
+    setFilters(issueFilter);
+  };
+
   return (
     <div className='p-4'>
       <h2 className='text-xl font-bold mb-4'>Issues</h2>
+      {statusMessage && (
+        <div className='bg-green-100 text-green-800 p-2 rounded mb-4'>
+          {statusMessage}
+        </div>
+      )}
 
       <div>
         <input
@@ -100,6 +125,21 @@ const Issues = () => {
             ))}
           </div>
         )}
+        <button
+          onClick={() => handleReset()}
+          className='mt-2 mb-3 bg-blue-500 px-4 py-2 rounded mt-2'
+        >
+          Reset Filters
+        </button>
+      </div>
+      <div>
+        <button
+          onClick={() => syncIssues()}
+          disabled={isSyncPending}
+          className='bg-blue-500 px-4 py-2 rounded mr-2'
+        >
+          {isSyncPending ? 'Syncing...' : 'Sync Now'}
+        </button>
       </div>
 
       <Table columns={columns} data={formattedData ?? []} />
@@ -144,6 +184,9 @@ const Issues = () => {
             Next
           </button>
         </div>
+      </div>
+      <div className='mt-4 text-sm text-gray-600'>
+        Last Sync At: {data?.lastSyncedAt ? formatDate(data.lastSyncedAt) : 'N/A'}
       </div>
     </div>
   );

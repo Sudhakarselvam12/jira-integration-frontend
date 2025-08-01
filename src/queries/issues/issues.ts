@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { FetchIssuesParams, IssueData, IssueFilter, IssueFilterOptions } from "./issues.types";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const fetchIssues = async (filters: IssueFilter, { page, limit }: FetchIssuesParams): Promise<IssueData> => {
   const res = await axios.get(`${import.meta.env.VITE_BACK_URL}/api/issues`, {
@@ -34,4 +34,29 @@ export const useGetIssueFilterQuery = () => {
       return res.data;
     },
   });
-}
+};
+
+export const useIssuesCountQuery = () => {
+  return useQuery({
+    queryKey: ['issuesCount'],
+    queryFn: async () => {
+      const res = await axios.get(`${import.meta.env.VITE_BACK_URL}/api/issues/count`);
+      return res.data;
+    },
+  });
+};
+
+export const useIssueSync = (onSyncSuccess: () => void, onSyncError: () => void) => {
+  return useMutation({
+    mutationFn: async () => {
+      const res = await axios.post(`${import.meta.env.VITE_BACK_URL}/api/sync/issues`);
+      return res.data;
+    },
+    onSuccess: () => {
+      onSyncSuccess();
+    },
+    onError: () => {
+      onSyncError();
+    },
+  });
+};
