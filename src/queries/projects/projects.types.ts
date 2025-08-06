@@ -1,6 +1,7 @@
 export type ProjectData = {
   data: Project[];
   count: number;
+  lastSyncedAt: string;
 }
 
 export type Project = {

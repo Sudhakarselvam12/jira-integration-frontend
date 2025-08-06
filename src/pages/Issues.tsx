@@ -22,12 +22,13 @@ const Issues = () => {
   const [limit, setLimit] = useState(10);
   const [debouncedFilters] = useDebounce(filters, 400);
 
-  const { data, isLoading, isError } = useIssuesQuery(debouncedFilters, page, limit);
+  const { data, refetch, isLoading, isError } = useIssuesQuery(debouncedFilters, page, limit);
   const { data: filterOptions } = useGetIssueFilterQuery();
 
   const onSyncSuccess = () => {
     setStatusMessage('Sync completed successfully.');
     setTimeout(() => setStatusMessage(null), 5000);
+    refetch();
   }
   const onSyncError = () => {
     setStatusMessage('Failed to sync issues.');
@@ -35,7 +36,7 @@ const Issues = () => {
   }
 
   const {
-    mutate: syncIssues,
+    mutate: syncIssuesFromJira,
     isPending: isSyncPending,
   } = useIssueSync(onSyncSuccess, onSyncError);
 
@@ -134,7 +135,7 @@ const Issues = () => {
       </div>
       <div>
         <button
-          onClick={() => syncIssues()}
+          onClick={() => syncIssuesFromJira()}
           disabled={isSyncPending}
           className='bg-blue-500 px-4 py-2 rounded mr-2'
         >
@@ -185,9 +186,11 @@ const Issues = () => {
           </button>
         </div>
       </div>
-      <div className='mt-4 text-sm text-gray-600'>
-        Last Sync At: {data?.lastSyncedAt ? formatDate(data.lastSyncedAt) : 'N/A'}
-      </div>
+      {data?.lastSyncedAt && (
+        <div className='mt-4 text-sm text-gray-600'>
+          Last Sync At: {data?.lastSyncedAt ? formatDate(data.lastSyncedAt) : 'N/A'}
+        </div>
+      )}
     </div>
   );
 };

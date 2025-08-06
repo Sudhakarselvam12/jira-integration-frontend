@@ -1,14 +1,30 @@
 import Table from "./../common/Table";
 import { useState } from "react";
-import { useProjectsQuery } from "../queries/projects/projects";
+import { useProjectsQuery, useProjectsSync } from "../queries/projects/projects";
 import type { Project } from "../queries/projects/projects.types";
 import { formatDate } from "../common/helper";
 
 const Projects = () => {
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
-  const { data, isLoading, isError } = useProjectsQuery(page, limit);
+  const { data, refetch, isLoading, isError } = useProjectsQuery(page, limit);
+
+  const onSyncSuccess = () => {
+    setStatusMessage('Sync completed successfully.');
+    setTimeout(() => setStatusMessage(null), 5000);
+    refetch();
+  }
+  const onSyncError = () => {
+    setStatusMessage('Failed to sync issues.');
+    setTimeout(() => setStatusMessage(null), 5000);
+  }
+
+  const {
+    mutate: syncProjectsFromJira,
+    isPending: isSyncPending,
+  } = useProjectsSync(onSyncSuccess, onSyncError);
 
   const total = data?.count || 0;
   const totalPages = Math.ceil(total / limit);
@@ -33,6 +49,20 @@ const Projects = () => {
   return (
     <div className="p-4">
       <h2 className="text-xl font-bold mb-4">Projects</h2>
+      {statusMessage && (
+        <div className='bg-green-100 text-green-800 p-2 rounded mb-4'>
+          {statusMessage}
+        </div>
+      )}
+      <div>
+        <button
+          onClick={() => syncProjectsFromJira()}
+          disabled={isSyncPending}
+          className='bg-blue-500 px-4 py-2 rounded mr-2'
+        >
+          {isSyncPending ? 'Syncing...' : 'Sync Now'}
+        </button>
+      </div>
       <Table columns={columns} data={formattedData || []} />
       <div className="mt-4 flex justify-end items-center gap-4 text-sm">
         <div className="flex items-center gap-2">
@@ -76,6 +106,11 @@ const Projects = () => {
           </button>
         </div>
       </div>
+      {data?.lastSyncedAt && (
+        <div className='mt-4 text-sm text-gray-600'>
+          Last Sync At: {data?.lastSyncedAt ? formatDate(data.lastSyncedAt) : 'N/A'}
+        </div>)
+      }
     </div>
   );
 };
