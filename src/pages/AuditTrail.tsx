@@ -6,6 +6,7 @@ import { useAuditTrailQuery, useGetAuditFilterQuery } from '../queries/audit-tra
 import { useDebounce } from 'use-debounce';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import axios from 'axios';
 
 const auditFilter = {
   entityType: '',
@@ -27,6 +28,26 @@ const isValidDateRange =
   const { data, isLoading, isError } = useAuditTrailQuery(debouncedFilters, page, limit, { enabled: isValidDateRange });
   const { data: filterOptions } = useGetAuditFilterQuery();
 
+    const handleExport = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BACK_URL}/api/audit/export`, {
+        responseType: 'blob',
+      });
+      if (response.status !== 200) {
+        throw new Error('Failed to export audit trail');
+      }
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `audit-tsrail_${new Date().toISOString().split('T')[0]}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Export failed:', error);
+    }
+  };
   const total = data?.count || 0;
   const totalPages = Math.ceil(total / limit);
 
@@ -106,6 +127,13 @@ const isValidDateRange =
           Please select both start date and end date
         </p>
       )}
+
+      <button
+        onClick={handleExport}
+        className='bg-blue-500 px-4 py-2 rounded hover:bg-blue-600'
+      >
+        Export to Excel
+      </button>
 
       <Table columns={columns} data={formattedData ?? []} />
 

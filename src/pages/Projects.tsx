@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useProjectsQuery, useProjectsSync } from "../queries/projects/projects";
 import type { Project } from "../queries/projects/projects.types";
 import { formatDate } from "../common/helper";
+import axios from "axios";
 
 const Projects = () => {
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
@@ -20,6 +21,27 @@ const Projects = () => {
     setStatusMessage('Failed to sync issues.');
     setTimeout(() => setStatusMessage(null), 5000);
   }
+
+  const handleExport = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BACK_URL}/api/projects/export`, {
+        responseType: 'blob',
+      });
+      if (response.status !== 200) {
+        throw new Error('Failed to export projects');
+      }
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `projects_${new Date().toISOString().split('T')[0]}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Export failed:', error);
+    }
+  };
 
   const {
     mutate: syncProjectsFromJira,
@@ -63,6 +85,12 @@ const Projects = () => {
           {isSyncPending ? 'Syncing...' : 'Sync Now'}
         </button>
       </div>
+      <button
+        onClick={handleExport}
+        className='bg-blue-500 px-4 py-2 rounded hover:bg-blue-600'
+      >
+        Export to Excel
+      </button>
       <Table columns={columns} data={formattedData || []} />
       <div className="mt-4 flex justify-end items-center gap-4 text-sm">
         <div className="flex items-center gap-2">
