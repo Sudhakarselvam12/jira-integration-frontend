@@ -1,29 +1,50 @@
 import { Link, Outlet } from "react-router-dom";
+import { useState } from "react";
+import { ChevronLeft, Menu } from "lucide-react";
+import "../styles/layout.scss";
 
 const Layout = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="bg-white shadow px-6 py-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Jira Integration</h1>
+    <div className="layout">
+      <header className="layout__header">
+        {!isSidebarOpen && (
+          <button
+            className="layout__menu-btn"
+            onClick={() => setIsSidebarOpen(true)}
+          >
+            <Menu size={22} />
+          </button>
+        )}
+        <h1 className="layout__title">Jira Integration</h1>
       </header>
 
-      <div className="flex flex-1">
-        <aside className="w-64 bg-white shadow-lg p-4">
-          <nav className="flex flex-col gap-4">
-            <Link to="/" className="text-gray-700 hover:text-primary">Dashboard</Link>
-            <Link to="/projects" className="text-gray-700 hover:text-primary">Projects</Link>
-            <Link to="/issues" className="text-gray-700 hover:text-primary">Issues</Link>
-            <Link to="/audit" className="text-gray-700 hover:text-primary">Audit</Link>
+      <div className="layout__body">
+        <aside className={`layout__sidebar ${isSidebarOpen ? "open" : ""}`}>
+          <nav className="layout__nav">
+            <Link to="/" className="layout__nav-link">Dashboard</Link>
+            <Link to="/projects" className="layout__nav-link">Projects</Link>
+            <Link to="/issues" className="layout__nav-link">Issues</Link>
+            <Link to="/audit" className="layout__nav-link">Audit</Link>
           </nav>
+          {isSidebarOpen && (
+            <button
+              className="layout__close-btn"
+              onClick={() => setIsSidebarOpen(false)}
+            >
+              <ChevronLeft size={18} />
+            </button>
+          )}
         </aside>
 
-        <main className="flex-1 p-6 bg-gray-100">
+        <main className="layout__content">
           <Outlet />
         </main>
       </div>
 
-      <footer className="bg-white text-center py-3 shadow-inner">
-        <span className="text-sm text-gray-500">© 2025 Jira Integration Dashboard</span>
+      <footer className="layout__footer">
+        <span>© 2025 Jira Integration Dashboard</span>
       </footer>
     </div>
   );

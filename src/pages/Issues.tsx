@@ -1,4 +1,4 @@
-import Table from './../common/Table';
+import Table from '../components/Table';
 import type { Issue, IssueFilter } from '../queries/issues/issues.types';
 import { useGetIssueFilterQuery, useIssuesQuery, useIssueSync } from '../queries/issues/issues';
 import { useState } from 'react';
@@ -65,19 +65,19 @@ const Issues = () => {
   const total = data?.count || 0;
   const totalPages = Math.ceil(total / limit);
 
-  const columns: { header: string; accessor: keyof Issue }[] = [
-    { header: 'Jira ID', accessor: 'jiraId' },
-    { header: 'Title', accessor: 'title' },
-    { header: 'Description', accessor: 'description' },
-    { header: 'Type', accessor: 'type' },
-    { header: 'Priority', accessor: 'priority' },
-    { header: 'Assignee', accessor: 'assignee' },
-    { header: 'Reporter', accessor: 'reporter' },
-    { header: 'Project', accessor: 'project' },
-    { header: 'Estimated Time', accessor: 'estimatedTime' },
-    { header: 'Spent Time', accessor: 'spentTime' },
-    { header: 'Status', accessor: 'status' },
-    { header: 'Created At', accessor: 'createdAt' },
+  const columns: { header: string; accessor: keyof Issue, width: string }[] = [
+    { header: 'Jira ID', accessor: 'jiraId', width: '120px' },
+    { header: 'Title', accessor: 'title', width: '200px' },
+    { header: 'Description', accessor: 'description', width: '350px' },
+    { header: 'Type', accessor: 'type', width: '100px' },
+    { header: 'Priority', accessor: 'priority', width: '100px' },
+    { header: 'Assignee', accessor: 'assignee', width: '150px' },
+    { header: 'Reporter', accessor: 'reporter', width: '150px' },
+    { header: 'Project', accessor: 'project', width: '150px' },
+    { header: 'Estimated Time', accessor: 'estimatedTime', width: '120px' },
+    { header: 'Spent Time', accessor: 'spentTime', width: '120px' },
+    { header: 'Status', accessor: 'status', width: '120px' },
+    { header: 'Created At', accessor: 'createdAt', width: '150px' },
   ];
 
   if (isLoading) return <p>Loading...</p>;

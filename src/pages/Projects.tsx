@@ -1,4 +1,4 @@
-import Table from "./../common/Table";
+import Table from "../components/Table";
 import { useState } from "react";
 import { useProjectsQuery, useProjectsSync } from "../queries/projects/projects";
 import type { Project } from "../queries/projects/projects.types";

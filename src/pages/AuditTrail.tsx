@@ -1,4 +1,4 @@
-import Table from './../common/Table';
+import Table from '../components/Table';
 import type { AuditFilter, AuditTrailType } from '../queries/audit-trail/audit-trail.types';
 import { useState } from 'react';
 import { formatDate } from '../common/helper';
@@ -28,7 +28,7 @@ const isValidDateRange =
   const { data, isLoading, isError } = useAuditTrailQuery(debouncedFilters, page, limit, { enabled: isValidDateRange });
   const { data: filterOptions } = useGetAuditFilterQuery();
 
-    const handleExport = async () => {
+  const handleExport = async () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_BACK_URL}/api/audit/export`, {
         responseType: 'blob',
