@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "../styles/table.scss";
 
 type Column<T> = {
@@ -6,7 +5,6 @@ type Column<T> = {
   accessor: keyof T;
   width?: string;
   maxWidth?: string;
-  maxHeight?: string;
 };
 
 type TableProps<T> = {
@@ -16,15 +14,6 @@ type TableProps<T> = {
 };
 
 function Table<T>({ columns, data, maxHeight = "500px" }: TableProps<T>) {
-  const [expandedRows, setExpandedRows] = useState<{[key: number]: boolean}>({});
-
-  const toggleRow = (index: number) => {
-    setExpandedRows(prev => ({
-      ...prev,
-      [index]: !prev[index]
-    }));
-  };
-
   return (
     <div className="table-container" style={{ maxHeight }}>
       <table className="custom-table">
@@ -53,25 +42,20 @@ function Table<T>({ columns, data, maxHeight = "500px" }: TableProps<T>) {
           ) : (
             data.map((row, idx) => (
               <tr key={idx}>
-                {columns.map((col) => {
-                  const expanded = expandedRows[idx];
-                  return (
-                    <td
-                      key={String(col.accessor)}
-                      onClick={() => toggleRow(idx)}
-                      style={{
-                        maxWidth: col.maxWidth || "200px",
-                        maxHeight: expanded ? "none" : col.maxHeight || "60px",
-                        overflow: "hidden"
-                      }}
-                      className={expanded ? "expanded" : "collapsed"}
-                    >
-                      <div className="cell-wrapper">
-                        {String(row[col.accessor])}
-                      </div>
-                    </td>
-                  );
-                })}
+                {columns.map((col) => (
+                  <td
+                    key={String(col.accessor)}
+                    style={{
+                      maxWidth: col.maxWidth || "200px",
+                      whiteSpace: "normal",
+                      wordBreak: "break-word"
+                    }}
+                  >
+                    <div className="cell-wrapper">
+                      {String(row[col.accessor])}
+                    </div>
+                  </td>
+                ))}
               </tr>
             ))
           )}

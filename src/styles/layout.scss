@@ -1,11 +1,10 @@
 .layout {
   display: flex;
   flex-direction: column;
-  height: 100vh; // Full viewport height
+  height: 100vh;
   font-family: 'Segoe UI', sans-serif;
   background: #f5f7fa;
 
-  /* HEADER - fixed at top */
   &__header {
     background: linear-gradient(90deg, #2563eb, #1e40af);
     color: white;
@@ -16,7 +15,7 @@
     font-size: 1.25rem;
     font-weight: 600;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    flex-shrink: 0; // Don't shrink
+    flex-shrink: 0;
   }
 
   &__menu-btn {
@@ -33,14 +32,12 @@
     }
   }
 
-  /* MAIN BODY - flex layout with sidebar + content */
   &__body {
     display: flex;
     flex: 1;
-    overflow: hidden; // Important: only content area scrolls
+    overflow: hidden;
   }
 
-  /* SIDEBAR */
   &__sidebar {
     background: white;
     border-right: 1px solid #e5e7eb;
@@ -50,8 +47,12 @@
     flex-direction: column;
     position: relative;
 
-    &.collapsed {
-      width: 60px; // Keeps a small collapsed state instead of 0
+    &.open {
+      width: 250px;
+    }
+
+    &:not(.open) {
+      width: 0px;
     }
   }
 
@@ -60,7 +61,7 @@
     flex-direction: column;
     padding: 1rem;
     flex: 1;
-    overflow-y: auto; // Sidebar scroll if links overflow
+    overflow-y: auto;
   }
 
   &__nav-link {
@@ -94,32 +95,30 @@
     }
   }
 
-  /* CONTENT AREA - scrollable vertically */
   &__content {
     flex: 1;
-    overflow-y: auto; // Scroll only content
+    overflow-y: auto;
     padding: 1.5rem;
     background: #f9fafb;
-    min-height: 0; // Important for flex scroll
+    min-height: 0;
   }
 
-  /* TABLE WRAPPER - horizontal & vertical scroll */
   &__table-wrapper {
-    overflow: auto; // Both X & Y scroll
-    max-height: 70vh; // Limit height
+    overflow: auto;
+    max-height: 70vh;
     border: 1px solid #ddd;
     border-radius: 6px;
   }
 
   table {
     border-collapse: collapse;
-    width: max-content; // Allows horizontal scrolling
-    min-width: 100%; // Fill container
+    width: max-content;
+    min-width: 100%;
 
     th, td {
       border: 1px solid #ddd;
       padding: 0.75rem;
-      white-space: nowrap; // Prevent wrap → allows horizontal scroll
+      white-space: nowrap;
     }
 
     th {
@@ -128,7 +127,6 @@
     }
   }
 
-  /* FOOTER - fixed at bottom */
   &__footer {
     background: linear-gradient(90deg, #1e40af, #2563eb);
     color: white;
