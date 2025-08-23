@@ -120,28 +120,28 @@ const Issues = () => {
           onChange={(e) => handleFilterChange('title', e.target.value)}
           className='border rounded p-1'
         />
-        {filterOptions && (
-          <div>
-            {Object.entries(filterOptions).map(([key, values]) => (
-              <div key={key} className='flex flex-col mr-4'>
-                <label className='text-sm font-bold mb-1 capitalize'>
-                  Filter by {key}
-                </label>
-                <select
-                  key={key}
-                  value={filters[key as keyof IssueFilter]}
-                  onChange={e => handleFilterChange(key as keyof IssueFilter, e.target.value)}
-                  className='border rounded p-1 text-sm'
-                >
-                  <option value=''>All {key}</option>
-                  {(values as string[]).map(v => (
-                    <option key={v} value={v}>{v}</option>
-                  ))}
-                </select>
-              </div>
-            ))}
-          </div>
-        )}
+          {filterOptions && (
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4'>
+              {Object.entries(filterOptions).map(([key, values]) => (
+                <div key={key} className='flex flex-col bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow-md transition'>
+                  <label className='text-sm font-bold mb-1 capitalize'>
+                    Filter by {key}
+                  </label>
+                  <select
+                    key={key}
+                    value={filters[key as keyof IssueFilter]}
+                    onChange={e => handleFilterChange(key as keyof IssueFilter, e.target.value)}
+                    className='border rounded p-1 text-sm'
+                  >
+                    <option value=''>All {key}</option>
+                    {(values as string[]).map(v => (
+                      <option key={v} value={v}>{v}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </div>
+          )}
         <button
           onClick={() => handleReset()}
           className='mt-2 mb-3 bg-blue-500 px-4 py-2 rounded mt-2'

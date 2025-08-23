@@ -54,6 +54,14 @@ const isValidDateRange =
     { header: 'Changed At', accessor: 'changedAt' },
   ];
 
+  const labelName = (key: string) => {
+    const labels: Record<string, string> = {
+      entityType: 'Entity Type',
+      changedField: 'Changed Field',
+    };
+    return labels[key] || key;
+  }
+
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Failed to load issues.</p>;
 
@@ -73,24 +81,22 @@ const isValidDateRange =
   return (
     <div className='p-4'>
       <h2 className='text-xl font-bold mb-4'>Audit Trail</h2>
-      <div className='flex gap-4 mb-4'>
-        {filterOptions && (
-          Object.entries(filterOptions).map(([key, values]) => (
-            <div key={key} className='flex flex-col'>
-              <label className='text-sm font-bold mb-1 capitalize'>Filter by {key}</label>
-              <select
-                value={filters[key as keyof AuditFilter]}
-                onChange={e => handleFilterChange(key as keyof AuditFilter, e.target.value)}
-                className='border rounded p-1 text-sm'
-              >
-                <option value=''>All {key}</option>
-                {(values as string[]).map(v => (
-                  <option key={v} value={v}>{v}</option>
-                ))}
-              </select>
-            </div>
-          ))
-        )}
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4'>
+        {filterOptions && Object.entries(filterOptions).map(([key, values]) => (
+          <div key={key} className='flex flex-col bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow-md transition'>
+            <label className='text-sm font-bold mb-1 capitalize'>Filter by {labelName(key)}</label>
+            <select
+              value={filters[key as keyof AuditFilter]}
+              onChange={e => handleFilterChange(key as keyof AuditFilter, e.target.value)}
+              className='border rounded p-1 text-sm'
+            >
+              <option value=''>All {labelName(key)}</option>
+              {(values as string[]).map(v => (
+                <option key={v} value={v}>{v}</option>
+              ))}
+            </select>
+          </div>
+        ))}
       </div>
 
       <div className='flex gap-4 mb-4'>
