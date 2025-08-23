@@ -60,3 +60,13 @@ export const useIssueSync = (onSyncSuccess: () => void, onSyncError: () => void)
     },
   });
 };
+
+export const exportIssuesData = async () => {
+  const response = await axios.get(`${import.meta.env.VITE_BACK_URL}/api/issues/export`, {
+    responseType: 'blob',
+  });
+  if (response.status !== 200) {
+    throw new Error('Failed to export issues');
+  }
+  return response.data;
+}

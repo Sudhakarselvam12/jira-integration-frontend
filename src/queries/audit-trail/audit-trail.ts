@@ -43,3 +43,13 @@ export const useGetAuditCountsQuery = () => {
     },
   });
 };
+
+export const exportAuditData = async () => {
+  const response = await axios.get(`${import.meta.env.VITE_BACK_URL}/api/audit/export`, {
+    responseType: 'blob',
+  });
+  if (response.status !== 200) {
+    throw new Error('Failed to export audit trail');
+  }
+  return response.data;
+}

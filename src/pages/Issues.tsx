@@ -1,10 +1,9 @@
 import Table from '../components/Table';
 import type { Issue, IssueFilter } from '../queries/issues/issues.types';
-import { useGetIssueFilterQuery, useIssuesQuery, useIssueSync } from '../queries/issues/issues';
+import { exportIssuesData, useGetIssueFilterQuery, useIssuesQuery, useIssueSync } from '../queries/issues/issues';
 import { useState } from 'react';
 import { useDebounce } from 'use-debounce';
 import { formatDate } from '../common/helper';
-import axios from 'axios';
 
 const issueFilter: IssueFilter = {
   jiraId: '',
@@ -38,14 +37,9 @@ const Issues = () => {
 
     const handleExport = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BACK_URL}/api/issues/export`, {
-        responseType: 'blob',
-      });
-      if (response.status !== 200) {
-        throw new Error('Failed to export issues');
-      }
+      const response = await exportIssuesData();
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const url = window.URL.createObjectURL(new Blob([response]));
       const link = document.createElement('a');
       link.href = url;
       link.setAttribute('download', `issues_${new Date().toISOString().split('T')[0]}.xlsx`);
