@@ -1,6 +1,11 @@
 import Table from '../components/Table';
 import type { Issue, IssueFilter } from '../queries/issues/issues.types';
-import { exportIssuesData, useGetIssueFilterQuery, useIssuesQuery, useIssueSync } from '../queries/issues/issues';
+import {
+  exportIssuesData,
+  useGetIssueFilterQuery,
+  useIssuesQuery,
+  useIssueSync,
+} from '../queries/issues/issues';
 import { useState } from 'react';
 import { useDebounce } from 'use-debounce';
 import { formatDate } from '../common/helper';
@@ -22,27 +27,34 @@ const Issues = () => {
   const [limit, setLimit] = useState(10);
   const [debouncedFilters] = useDebounce(filters, 400);
 
-  const { data, refetch, isLoading, isError } = useIssuesQuery(debouncedFilters, page, limit);
+  const { data, refetch, isLoading, isError } = useIssuesQuery(
+    debouncedFilters,
+    page,
+    limit
+  );
   const { data: filterOptions } = useGetIssueFilterQuery();
 
   const onSyncSuccess = () => {
     setStatusMessage('Sync completed successfully.');
     setTimeout(() => setStatusMessage(null), 5000);
     refetch();
-  }
+  };
   const onSyncError = () => {
     setStatusMessage('Failed to sync issues.');
     setTimeout(() => setStatusMessage(null), 5000);
-  }
+  };
 
-    const handleExport = async () => {
+  const handleExport = async () => {
     try {
       const response = await exportIssuesData();
 
       const url = window.URL.createObjectURL(new Blob([response]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `issues_${new Date().toISOString().split('T')[0]}.xlsx`);
+      link.setAttribute(
+        'download',
+        `issues_${new Date().toISOString().split('T')[0]}.xlsx`
+      );
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -51,15 +63,15 @@ const Issues = () => {
     }
   };
 
-  const {
-    mutate: syncIssuesFromJira,
-    isPending: isSyncPending,
-  } = useIssueSync(onSyncSuccess, onSyncError);
+  const { mutate: syncIssuesFromJira, isPending: isSyncPending } = useIssueSync(
+    onSyncSuccess,
+    onSyncError
+  );
 
   const total = data?.count || 0;
   const totalPages = Math.ceil(total / limit);
 
-  const columns: { header: string; accessor: keyof Issue, width: string }[] = [
+  const columns: { header: string; accessor: keyof Issue; width: string }[] = [
     { header: 'Jira ID', accessor: 'jiraId', width: '120px' },
     { header: 'Title', accessor: 'title', width: '200px' },
     { header: 'Description', accessor: 'description', width: '350px' },
@@ -98,7 +110,7 @@ const Issues = () => {
 
   return (
     <div className='p-4'>
-      <h2 className="text-2xl font-bold mb-6 px-6 py-3 rounded-lg bg-gradient-to-r from-blue-100 to-blue-300 text-blue-900 shadow">
+      <h2 className='text-2xl font-bold mb-6 px-6 py-3 rounded-lg bg-gradient-to-r from-blue-100 to-blue-300 text-blue-900 shadow'>
         Issues
       </h2>
       {statusMessage && (
@@ -124,29 +136,36 @@ const Issues = () => {
             className='border rounded p-1'
           />
         </div>
-          {filterOptions && (
-            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4'>
-              {Object.entries(filterOptions).map(([key, values]) => (
-                <div key={key} className='flex flex-col bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow-md transition'>
-                  <label className='text-sm font-bold mb-1 capitalize'>
-                    Filter by {key}
-                  </label>
-                  <select
-                    key={key}
-                    value={filters[key as keyof IssueFilter]}
-                    onChange={e => handleFilterChange(key as keyof IssueFilter, e.target.value)}
-                    className='border rounded p-1 text-sm'
-                  >
-                    <option value=''>All {key}</option>
-                    {(values as string[]).map(v => (
-                      <option key={v} value={v}>{v}</option>
-                    ))}
-                  </select>
-                </div>
-              ))}
-            </div>
-          )}
-        <div className="flex justify-end">
+        {filterOptions && (
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4'>
+            {Object.entries(filterOptions).map(([key, values]) => (
+              <div
+                key={key}
+                className='flex flex-col bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow-md transition'
+              >
+                <label className='text-sm font-bold mb-1 capitalize'>
+                  Filter by {key}
+                </label>
+                <select
+                  key={key}
+                  value={filters[key as keyof IssueFilter]}
+                  onChange={(e) =>
+                    handleFilterChange(key as keyof IssueFilter, e.target.value)
+                  }
+                  className='border rounded p-1 text-sm'
+                >
+                  <option value=''>All {key}</option>
+                  {(values as string[]).map((v) => (
+                    <option key={v} value={v}>
+                      {v}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className='flex justify-end'>
           <button
             onClick={() => handleReset()}
             className='mt-2 mb-3 bg-blue-500 px-4 py-2 rounded shadow'
@@ -215,7 +234,8 @@ const Issues = () => {
       </div>
       {data?.lastSyncedAt && (
         <div className='mt-4 text-sm text-gray-600'>
-          Last Sync At: {data?.lastSyncedAt ? formatDate(data.lastSyncedAt) : 'N/A'}
+          Last Sync At:{' '}
+          {data?.lastSyncedAt ? formatDate(data.lastSyncedAt) : 'N/A'}
         </div>
       )}
     </div>

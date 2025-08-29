@@ -29,27 +29,28 @@ const Dashboard = () => {
 
   return (
     <div className='p-4 display-flex'>
-      <h2 className="text-2xl font-bold mb-6 px-6 py-3 rounded-lg bg-gradient-to-r from-blue-100 to-blue-300 text-blue-900 shadow">
+      <h2 className='text-2xl font-bold mb-6 px-6 py-3 rounded-lg bg-gradient-to-r from-blue-100 to-blue-300 text-blue-900 shadow'>
         Dashboard
       </h2>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-        {stats.map((stat) =>
-        <Link to={stat.link} key={stat.label} className='no-underline'>
-          <Card
-            key={stat.label}
-            className={`rounded-2xl shadow-xl p-0 bg-gradient-to-br from-blue-200 to-blue-500 transition-transform transform hover:scale-105`}
-            style={{ minHeight: 180 }}
-          >
-            <CardContent className="flex flex-col items-center justify-center h-full p-6">
-          <h2 className='text-xl font-semibold text-white drop-shadow mb-2'>
-            {stat.label}
-          </h2>
-          <p className='text-5xl font-extrabold text-white drop-shadow-lg mt-2'>
-            {stat.count}
-          </p>
-            </CardContent>
-          </Card>
-        </Link>)}
+        {stats.map((stat) => (
+          <Link to={stat.link} key={stat.label} className='no-underline'>
+            <Card
+              key={stat.label}
+              className={`rounded-2xl shadow-xl p-0 bg-gradient-to-br from-blue-200 to-blue-500 transition-transform transform hover:scale-105`}
+              style={{ minHeight: 180 }}
+            >
+              <CardContent className='flex flex-col items-center justify-center h-full p-6'>
+                <h2 className='text-xl font-semibold text-white drop-shadow mb-2'>
+                  {stat.label}
+                </h2>
+                <p className='text-5xl font-extrabold text-white drop-shadow-lg mt-2'>
+                  {stat.count}
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
       </div>
     </div>
   );
