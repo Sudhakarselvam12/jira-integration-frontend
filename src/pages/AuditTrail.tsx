@@ -78,62 +78,77 @@ const isValidDateRange =
     }));
   };
 
+  const handleReset = () => {
+    setPage(1);
+    setFilters(auditFilter);
+  };
+
   return (
     <div className='p-4'>
-      <h2 className='text-xl font-bold mb-4'>Audit Trail</h2>
-      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4'>
-        {filterOptions && Object.entries(filterOptions).map(([key, values]) => (
-          <div key={key} className='flex flex-col bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow-md transition'>
-            <label className='text-sm font-bold mb-1 capitalize'>Filter by {labelName(key)}</label>
-            <select
-              value={filters[key as keyof AuditFilter]}
-              onChange={e => handleFilterChange(key as keyof AuditFilter, e.target.value)}
-              className='border rounded p-1 text-sm'
-            >
-              <option value=''>All {labelName(key)}</option>
-              {(values as string[]).map(v => (
-                <option key={v} value={v}>{v}</option>
-              ))}
-            </select>
+      <h2 className="text-2xl font-bold mb-6 px-6 py-3 rounded-lg bg-gradient-to-r from-blue-100 to-blue-300 text-blue-900 shadow">
+        Audit Trail
+      </h2>
+      <div className='mb-4 shadow-sm p-4 rounded-lg'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4'>
+          {filterOptions && Object.entries(filterOptions).map(([key, values]) => (
+            <div key={key} className='flex flex-col bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow-md transition'>
+              <label className='text-sm font-bold mb-1 capitalize'>Filter by {labelName(key)}</label>
+              <select
+                value={filters[key as keyof AuditFilter]}
+                onChange={e => handleFilterChange(key as keyof AuditFilter, e.target.value)}
+                className='border rounded p-1 text-sm'
+              >
+                <option value=''>All {labelName(key)}</option>
+                {(values as string[]).map(v => (
+                  <option key={v} value={v}>{v}</option>
+                ))}
+              </select>
+            </div>
+          ))}
+          <div className='flex flex-col shadow-sm p-4 rounded-lg'>
+            <label className='text-sm font-bold mb-1'>Start Date</label>
+            <DatePicker
+              selected={filters.startDate ? new Date(filters.startDate) : null}
+              onChange={(date) => handleFilterChange('startDate', date?.toISOString().split('T')[0] ?? '')}
+              maxDate={filters.endDate ? new Date(filters.endDate) : new Date()}
+              dateFormat="yyyy-MM-dd"
+              placeholderText="Start Date"
+            />
           </div>
-        ))}
-      </div>
-
-      <div className='flex gap-4 mb-4'>
-        <div className='flex flex-col'>
-          <label className='text-sm font-bold mb-1'>Start Date</label>
-          <DatePicker
-            selected={filters.startDate ? new Date(filters.startDate) : null}
-            onChange={(date) => handleFilterChange('startDate', date?.toISOString().split('T')[0] ?? '')}
-            maxDate={filters.endDate ? new Date(filters.endDate) : new Date()}
-            dateFormat="yyyy-MM-dd"
-            placeholderText="Start Date"
-          />
+          <div className='flex flex-col shadow-sm p-4 rounded-lg'>
+            <label className='text-sm font-bold mb-1'>End Date</label>
+            <DatePicker
+              selected={filters.endDate ? new Date(filters.endDate) : null}
+              onChange={(date) => handleFilterChange('endDate', date?.toISOString().split('T')[0] ?? '')}
+              minDate={filters.startDate ? new Date(filters.startDate) : undefined}
+              maxDate={new Date()}
+              disabled={!filters.startDate}
+              placeholderText="End Date"
+            />
+          </div>
         </div>
-        <div className='flex flex-col'>
-          <label className='text-sm font-bold mb-1'>End Date</label>
-          <DatePicker
-            selected={filters.endDate ? new Date(filters.endDate) : null}
-            onChange={(date) => handleFilterChange('endDate', date?.toISOString().split('T')[0] ?? '')}
-            minDate={filters.startDate ? new Date(filters.startDate) : undefined}
-            maxDate={new Date()}
-            disabled={!filters.startDate}
-            placeholderText="End Date"
-          />
+        {!isValidDateRange && (
+          <p className="text-red-500 text-sm mb-2">
+            Please select both start date and end date
+          </p>
+        )}
+        <div className="flex justify-end">
+          <button
+            onClick={() => handleReset()}
+            className='mt-2 mb-3 bg-blue-500 px-4 py-2 rounded shadow'
+          >
+            Reset Filters
+          </button>
         </div>
       </div>
-      {!isValidDateRange && (
-        <p className="text-red-500 text-sm mb-2">
-          Please select both start date and end date
-        </p>
-      )}
-
-      <button
-        onClick={handleExport}
-        className='bg-blue-500 px-4 py-2 rounded hover:bg-blue-600'
-      >
-        Export to Excel
-      </button>
+      <div className='flex justify-end mb-4'>
+        <button
+          onClick={handleExport}
+          className='bg-blue-500 px-4 py-2 rounded hover:bg-blue-600 shadow'
+        >
+          Export to Excel
+        </button>
+      </div>
 
       <Table columns={columns} data={formattedData ?? []} />
 

@@ -13,7 +13,7 @@ type TableProps<T> = {
   maxHeight?: string | number;
 };
 
-function Table<T>({ columns, data, maxHeight = "500px" }: TableProps<T>) {
+function Table<T>({ columns, data, maxHeight = "700px" }: TableProps<T>) {
   return (
     <div className="table-container" style={{ maxHeight }}>
       <table className="custom-table">

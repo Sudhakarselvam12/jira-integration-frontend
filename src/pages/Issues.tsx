@@ -98,28 +98,32 @@ const Issues = () => {
 
   return (
     <div className='p-4'>
-      <h2 className='text-xl font-bold mb-4'>Issues</h2>
+      <h2 className="text-2xl font-bold mb-6 px-6 py-3 rounded-lg bg-gradient-to-r from-blue-100 to-blue-300 text-blue-900 shadow">
+        Issues
+      </h2>
       {statusMessage && (
         <div className='bg-green-100 text-green-800 p-2 rounded mb-4'>
           {statusMessage}
         </div>
       )}
 
-      <div>
-        <input
-          type='text'
-          placeholder='Search by Jira ID'
-          value={filters.jiraId}
-          onChange={(e) => handleFilterChange('jiraId', e.target.value)}
-          className='border rounded p-1 mr-2'
-        />
-        <input
-          type='text'
-          placeholder='Search by Title'
-          value={filters.title}
-          onChange={(e) => handleFilterChange('title', e.target.value)}
-          className='border rounded p-1'
-        />
+      <div className='mb-4 shadow-sm p-4 rounded-lg'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4'>
+          <input
+            type='text'
+            placeholder='Search by Jira ID'
+            value={filters.jiraId}
+            onChange={(e) => handleFilterChange('jiraId', e.target.value)}
+            className='border rounded p-1 mr-2'
+          />
+          <input
+            type='text'
+            placeholder='Search by Title'
+            value={filters.title}
+            onChange={(e) => handleFilterChange('title', e.target.value)}
+            className='border rounded p-1'
+          />
+        </div>
           {filterOptions && (
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4'>
               {Object.entries(filterOptions).map(([key, values]) => (
@@ -142,28 +146,30 @@ const Issues = () => {
               ))}
             </div>
           )}
-        <button
-          onClick={() => handleReset()}
-          className='mt-2 mb-3 bg-blue-500 px-4 py-2 rounded mt-2'
-        >
-          Reset Filters
-        </button>
+        <div className="flex justify-end">
+          <button
+            onClick={() => handleReset()}
+            className='mt-2 mb-3 bg-blue-500 px-4 py-2 rounded shadow'
+          >
+            Reset Filters
+          </button>
+        </div>
       </div>
-      <div>
+      <div className='flex justify-end mb-4'>
         <button
           onClick={() => syncIssuesFromJira()}
           disabled={isSyncPending}
-          className='bg-blue-500 px-4 py-2 rounded mr-2'
+          className='bg-blue-500 px-4 py-2 rounded mr-2 shadow'
         >
           {isSyncPending ? 'Syncing...' : 'Sync Now'}
         </button>
+        <button
+          onClick={handleExport}
+          className='bg-blue-500 px-4 py-2 rounded hover:bg-blue-600 shadow'
+        >
+          Export to Excel
+        </button>
       </div>
-      <button
-        onClick={handleExport}
-        className='bg-blue-500 px-4 py-2 rounded hover:bg-blue-600'
-      >
-        Export to Excel
-      </button>
       <Table columns={columns} data={formattedData ?? []} />
       <div className='mt-4 flex justify-end items-center gap-4 text-sm'>
         <div className='flex items-center gap-2'>

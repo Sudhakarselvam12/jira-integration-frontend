@@ -70,13 +70,15 @@ const Projects = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Projects</h2>
+      <h2 className="text-2xl font-bold mb-6 px-6 py-3 rounded-lg bg-gradient-to-r from-blue-100 to-blue-300 text-blue-900 shadow">
+        Projects
+      </h2>
       {statusMessage && (
         <div className='bg-green-100 text-green-800 p-2 rounded mb-4'>
           {statusMessage}
         </div>
       )}
-      <div>
+      <div className='flex justify-end mb-4'>
         <button
           onClick={() => syncProjectsFromJira()}
           disabled={isSyncPending}
@@ -84,13 +86,13 @@ const Projects = () => {
         >
           {isSyncPending ? 'Syncing...' : 'Sync Now'}
         </button>
+        <button
+          onClick={handleExport}
+          className='bg-blue-500 px-4 py-2 rounded hover:bg-blue-600'
+        >
+          Export to Excel
+        </button>
       </div>
-      <button
-        onClick={handleExport}
-        className='bg-blue-500 px-4 py-2 rounded hover:bg-blue-600'
-      >
-        Export to Excel
-      </button>
       <Table columns={columns} data={formattedData || []} />
       <div className="mt-4 flex justify-end items-center gap-4 text-sm">
         <div className="flex items-center gap-2">
