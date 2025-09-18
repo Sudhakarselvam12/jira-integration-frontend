@@ -44,7 +44,7 @@ const Layout = () => {
       </div>
 
       <footer className="layout__footer">
-        <span>© 2025 Jira Integration Dashboard</span>
+        <span>Built with React, Express, PostgreSQL</span>
       </footer>
     </div>
   );
