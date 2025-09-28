@@ -5,24 +5,49 @@ import { useGetAuditCountsQuery } from '../queries/audit-trail/audit-trail';
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
-  const { data: projectCount } = useGetProjectCountsQuery();
-  const { data: issuesCount } = useIssuesCountQuery();
-  const { data: auditCount } = useGetAuditCountsQuery();
+  const {
+    data: projectCount,
+    isLoading: isProjectLoading,
+    isError: isProjectError,
+    refetch: refetchProjects
+  } = useGetProjectCountsQuery();
+
+  const {
+    data: issuesCount,
+    isLoading: issuesLoading,
+    isError: issuesError,
+    refetch: refetchIssues,
+  } = useIssuesCountQuery();
+  const {
+    data: auditCount,
+    isLoading: auditLoading,
+    isError: auditError,
+    refetch: refetchAudit,
+   } = useGetAuditCountsQuery();
 
   const stats = [
     {
       label: 'Projects',
       count: projectCount?.count || 0,
+      isLoading: isProjectLoading,
+      isError: isProjectError,
+      refetch: refetchProjects,
       link: '/projects',
     },
     {
       label: 'Issues',
       count: issuesCount?.count || 0,
+      isLoading: issuesLoading,
+      isError: issuesError,
+      refetch: refetchIssues,
       link: '/issues',
     },
     {
       label: 'Audit Trails',
       count: auditCount?.count || 0,
+      isLoading: auditLoading,
+      isError: auditError,
+      refetch: refetchAudit,
       link: '/audit',
     },
   ];
@@ -41,12 +66,24 @@ const Dashboard = () => {
               style={{ minHeight: 180 }}
             >
               <CardContent className='flex flex-col items-center justify-center h-full p-6'>
-                <h2 className='text-xl font-semibold text-white drop-shadow mb-2'>
-                  {stat.label}
-                </h2>
-                <p className='text-5xl font-extrabold text-white drop-shadow-lg mt-2'>
-                  {stat.count}
-                </p>
+                {stat.isLoading ? (
+                  <p className='text-lg text-white'>Loading...</p>
+                ) : stat.isError ? (
+                  <div className='flex flex-col items-center'>
+                    <p className='text-xl font-extrabold text-white drop-shadow-lg mt-2'>
+                      Error Fetching Count
+                    </p>
+                  </div>
+                ) : (
+                  <div className='flex flex-col items-center'>
+                    <h2 className='text-xl font-semibold text-white drop-shadow mb-2'>
+                      {stat.label}
+                    </h2>
+                    <p className='text-5xl font-extrabold text-white drop-shadow-lg mt-2'>
+                      {stat.count}
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </Link>
