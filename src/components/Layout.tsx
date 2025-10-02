@@ -44,7 +44,7 @@ const Layout = () => {
       </div>
 
       <footer className="layout__footer">
-        <span>Built with React, Express, PostgreSQL</span>
+        <span>Built with Node, React, Express, PostgreSQL</span>
       </footer>
     </div>
   );
